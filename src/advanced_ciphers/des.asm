@@ -7,19 +7,19 @@ BLOCK_SIZE equ 8
 .const
     ; Some tables differ from original
     ; They were changed because of bit indexing in original tables (from most significant)
-	ip_table \
+    ip_table \
     byte 57, 49, 41, 33, 25, 17,  9,  1, 59, 51, 43, 35, 27, 19, 11,  3
     byte 61, 53, 45, 37, 29, 21, 13,  5, 63, 55, 47, 39, 31, 23, 15,  7
     byte 56, 48, 40, 32, 24, 16,  8,  0, 58, 50, 42, 34, 26, 18, 10,  2
     byte 60, 52, 44, 36, 28, 20, 12,  4, 62, 54, 46, 38, 30, 22, 14,  6
 
-	inv_ip_table \
+    inv_ip_table \
     byte 39,  7, 47, 15, 55, 23, 63, 31, 38,  6, 46, 14, 54, 22, 62, 30
     byte 37,  5, 45, 13, 53, 21, 61, 29, 36,  4, 44, 12, 52, 20, 60, 28
     byte 35,  3, 43, 11, 51, 19, 59, 27, 34,  2, 42, 10, 50, 18, 58, 26
     byte 33,  1, 41,  9, 49, 17, 57, 25, 32,  0, 40,  8, 48, 16, 56, 24
 
-	e_table \
+    e_table \
     byte 31,  0,  1,  2,  3,  4
     byte  3,  4,  5,  6,  7,  8
     byte  7,  8,  9, 10, 11, 12
@@ -29,7 +29,7 @@ BLOCK_SIZE equ 8
     byte 23, 24, 25, 26, 27, 28
     byte 27, 28, 29, 30, 31,  0
 
-	p_table \
+    p_table \
     byte  7, 28, 21, 10, 26,  2, 19, 13
     byte 23, 29,  5,  0, 18,  8, 24, 30
     byte 22,  1, 14, 27,  6,  9, 17, 31
@@ -124,16 +124,16 @@ option epilogue:EpilogueDef
 DesEncrypt proc
     local buffer: ByteSequence
     encrypted_text equ [rbp + 16]
-	key equ [rbp + 32]
-	; Prologue
-	mov encrypted_text, rcx
-	mov key, r8
-	sub rsp, 32
+    key equ [rbp + 32]
+    ; Prologue
+    mov encrypted_text, rcx
+    mov key, r8
+    sub rsp, 32
 
-	; Add padding
-	lea rcx, buffer
-	mov r8b, BLOCK_SIZE
-	call AddPadding
+    ; Add padding
+    lea rcx, buffer
+    mov r8b, BLOCK_SIZE
+    call AddPadding
 
     ; Encryption
     mov rcx, encrypted_text
@@ -163,18 +163,18 @@ DesEncrypt endp
 ;   RAX: ByteSequence* - encrypted text (caller must free)
 DesEncryptWithoutPadding proc
     encrypted_text equ [rbp + 16]
-	text equ [rbp + 24]
-	key equ [rbp + 32]
-	; Prologue
-	push rbp
+    text equ [rbp + 24]
+    key equ [rbp + 32]
+    ; Prologue
+    push rbp
     mov rbp, rsp
     push r12
     push r13
     push r14
     push r15
     mov encrypted_text, rcx
-	mov text, rdx
-	sub rsp, 32
+    mov text, rdx
+    sub rsp, 32
 
     ; Get round keys
     mov rcx, r8
@@ -303,13 +303,13 @@ option epilogue:EpilogueDef
 DesDecrypt proc
     local buffer: ByteSequence
     decrypted_text equ [rbp + 16]
-	text equ [rbp + 24]
-	key equ [rbp + 32]
-	; Prologue
-	mov decrypted_text, rcx
-	mov text, rdx
-	mov key, r8
-	sub rsp, 32
+    text equ [rbp + 24]
+    key equ [rbp + 32]
+    ; Prologue
+    mov decrypted_text, rcx
+    mov text, rdx
+    mov key, r8
+    sub rsp, 32
 
     lea rcx, buffer
     call DesDecryptWithoutPadding
@@ -341,18 +341,18 @@ DesDecrypt endp
 ;   RAX: ByteSequence* - decrypted text (caller must free)
 DesDecryptWithoutPadding proc
     decrypted_text equ [rbp + 16]
-	text equ [rbp + 24]
-	key equ [rbp + 32]
-	; Prologue
-	push rbp
+    text equ [rbp + 24]
+    key equ [rbp + 32]
+    ; Prologue
+    push rbp
     mov rbp, rsp
     push r12
     push r13
     push r14
     push r15
     mov decrypted_text, rcx
-	mov text, rdx
-	sub rsp, 32
+    mov text, rdx
+    sub rsp, 32
 
     ; Get round keys
     mov rcx, r8

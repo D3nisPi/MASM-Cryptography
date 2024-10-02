@@ -26,7 +26,7 @@ CreateBS proc
     call GetProcessHeap
     mov rcx, rax
     mov edx, 0
-	mov r8, sequence_size
+    mov r8, sequence_size
     call HeapAlloc
 
     ; Initialize fields

@@ -41,7 +41,7 @@ RC5Encrypt proc
     mov text, rdx
     mov key, r8
     mov rounds, r9b
-	sub rsp, 40
+    sub rsp, 40
 
     ; Initialize array L with key
     mov rcx, r8
@@ -178,20 +178,20 @@ option epilogue:EpilogueDef
 RC5Decrypt proc
     local buffer: ByteSequence
     decrypted_text equ [rbp + 16]
-	text equ [rbp + 24]
-	key equ [rbp + 32]
+    text equ [rbp + 24]
+    key equ [rbp + 32]
     rounds equ [rbp + 40]
-	; Prologue
+    ; Prologue
     push rbx
     push r12
     push r13
     push r14
     push r15
-	mov decrypted_text, rcx
-	mov text, rdx
-	mov key, r8
+    mov decrypted_text, rcx
+    mov text, rdx
+    mov key, r8
     mov rounds, r9b
-	sub rsp, 40
+    sub rsp, 40
 
     ; Initialize array L with key
     mov rcx, r8
@@ -242,8 +242,8 @@ condition:
     call RemovePadding
 
     ; Free buffer
-	lea rcx, buffer
-	call FreeBS
+    lea rcx, buffer
+    call FreeBS
 
     mov rax, decrypted_text
 
@@ -497,42 +497,42 @@ RC5Shuffle endp
 ;   RAX: ByteSequence* - key (caller must free)
 RC5GenKey proc
     key equ [rbp + 16]
-	key_length equ [rbp + 24]
+    key_length equ [rbp + 24]
     ; Prologue
-	push rbp
-	mov rbp, rsp
-	push r12
-	push r13
-	mov key, rcx
-	sub rsp, 32
+    push rbp
+    mov rbp, rsp
+    push r12
+    push r13
+    mov key, rcx
+    sub rsp, 32
 
     ; Init key
-	movzx rdx, dl
-	call CreateBS
+    movzx rdx, dl
+    call CreateBS
 
     ; Fill key with random values
-	; r12 - index
-	; r13 - key data
-	mov r12, [rax + ByteSequence.data_size]
+    ; r12 - index
+    ; r13 - key data
+    mov r12, [rax + ByteSequence.data_size]
     dec r12
-	mov r13, [rax + ByteSequence.data]
+    mov r13, [rax + ByteSequence.data]
     jmp condition
 cycle:
-	call GenRandom8
+    call GenRandom8
     mov [r13 + r12], al
-	dec r12
+    dec r12
 condition:
-	cmp r12, 0
-	jge cycle
+    cmp r12, 0
+    jge cycle
 
-	mov rax, key
+    mov rax, key
 
     ; Epilogue
-	add rsp, 32
-	pop r13
-	pop r12
-	mov rsp, rbp
-	pop rbp
-	ret
+    add rsp, 32
+    pop r13
+    pop r12
+    mov rsp, rbp
+    pop rbp
+    ret
 RC5GenKey endp
 end

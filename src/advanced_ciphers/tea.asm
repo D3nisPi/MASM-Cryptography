@@ -22,26 +22,26 @@ TeaEncrypt proc
     local buffer: ByteSequence
     encrypted_text equ [rbp + 16]
     text equ [rbp + 24]
-	key equ [rbp + 32]
-	; Prologue
-	push rbx
-	push r12
-	push r13
-	push r14
+    key equ [rbp + 32]
+    ; Prologue
+    push rbx
+    push r12
+    push r13
+    push r14
     push r15
-	mov encrypted_text, rcx
+    mov encrypted_text, rcx
     mov text, rdx
     mov key, r8
-	sub rsp, 40
+    sub rsp, 40
 
-	; Add padding
-	lea rcx, buffer
-	mov r8b, BLOCK_SIZE
-	call AddPadding
+    ; Add padding
+    lea rcx, buffer
+    mov r8b, BLOCK_SIZE
+    call AddPadding
 
-	; Init encrypted_text fields
-	mov rcx, encrypted_text
-	mov rdx, [rax + ByteSequence.data_size]
+    ; Init encrypted_text fields
+    mov rcx, encrypted_text
+    mov rdx, [rax + ByteSequence.data_size]
     call CreateBS
     
     ; Encryption
@@ -50,7 +50,7 @@ TeaEncrypt proc
     ; r13 - buffer data
     ; r14 - encrypted text data
     ; r15 - length
-	mov rbx, key
+    mov rbx, key
     mov r12, 0
     lea r13, buffer
     mov r13, [r13 + ByteSequence.data]
@@ -79,10 +79,10 @@ condition:
     ; Epilogue
     add rsp, 40
     pop r15
-	pop r14
-	pop r13
-	pop r12
-	pop rbx
+    pop r14
+    pop r13
+    pop r12
+    pop rbx
     ret
 TeaEncrypt endp
 
@@ -171,21 +171,21 @@ TeaDecrypt proc
     local buffer: ByteSequence
     decrypted_text equ [rbp + 16]
     text equ [rbp + 24]
-	key equ [rbp + 32]
-	; Prologue
-	push rbx
-	push r12
-	push r13
-	push r14
+    key equ [rbp + 32]
+    ; Prologue
+    push rbx
+    push r12
+    push r13
+    push r14
     push r15
-	mov decrypted_text, rcx
+    mov decrypted_text, rcx
     mov text, rdx
     mov key, r8
-	sub rsp, 40
+    sub rsp, 40
 
-	; Init buffer
-	lea rcx, buffer
-	mov rdx, [rdx + ByteSequence.data_size]
+    ; Init buffer
+    lea rcx, buffer
+    mov rdx, [rdx + ByteSequence.data_size]
     call CreateBS
     
     ; Decryption
@@ -194,7 +194,7 @@ TeaDecrypt proc
     ; r13 - text data
     ; r14 - buffer data
     ; r15 - length
-	mov rbx, key
+    mov rbx, key
     mov r12, 0
     mov r13, text
     mov r13, [r13 + ByteSequence.data]
@@ -228,10 +228,10 @@ condition:
     ; Epilogue
     add rsp, 40
     pop r15
-	pop r14
-	pop r13
-	pop r12
-	pop rbx
+    pop r14
+    pop r13
+    pop r12
+    pop rbx
     ret
 TeaDecrypt endp
 
@@ -314,37 +314,37 @@ TeaDecryptBlock endp
 ;   RAX: ByteSequence* - key (caller must free)
 TeaGenKey proc
     ; Prologue
-	push r12
-	push r13
+    push r12
+    push r13
     push r14
-	mov r14, rcx
-	sub rsp, 32
+    mov r14, rcx
+    sub rsp, 32
 
     ; Init key
-	mov rdx, 16
-	call CreateBS
+    mov rdx, 16
+    call CreateBS
 
     ; Fill key with random values
-	; r12 - index
-	; r13 - key data
-	mov r12, 15
-	mov r13, [rax + ByteSequence.data]
+    ; r12 - index
+    ; r13 - key data
+    mov r12, 15
+    mov r13, [rax + ByteSequence.data]
     jmp condition
 cycle:
-	call GenRandom8
+    call GenRandom8
     mov [r13 + r12], al
-	dec r12
+    dec r12
 condition:
-	cmp r12, 0
-	jge cycle
+    cmp r12, 0
+    jge cycle
 
-	mov rax, r14
+    mov rax, r14
 
     ; Epilogue
-	add rsp, 32
+    add rsp, 32
     pop r14
-	pop r13
-	pop r12
-	ret
+    pop r13
+    pop r12
+    ret
 TeaGenKey endp
 end

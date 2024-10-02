@@ -43,7 +43,7 @@ RC6Encrypt proc
     mov text, rdx
     mov key, r8
     mov rounds, r9b
-	sub rsp, 32
+    sub rsp, 32
 
     ; Initialize array L with key
     mov rcx, r8
@@ -166,7 +166,7 @@ cycle:
     rol eax, 5
     mov r14d, eax
 
-	; u = (D(2D + 1)) <<< lg w
+    ; u = (D(2D + 1)) <<< lg w
     mov eax, r11d
     mov edx, r11d
     shl edx, 1
@@ -175,14 +175,14 @@ cycle:
     rol eax, 5
     mov r15d, eax
 
-	; A = ((A xor t) <<< u) + S[2i]
+    ; A = ((A xor t) <<< u) + S[2i]
     xor r8d, r14d
     mov ecx, r15d
     and ecx, 31
     rol r8d, cl
     add r8d, [rbx + r12 * 8]
 
-	; C = ((C xor u) <<< t) + S[2i + 1]
+    ; C = ((C xor u) <<< t) + S[2i + 1]
     xor r10d, r15d
     mov ecx, r14d
     and ecx, 31
@@ -236,21 +236,21 @@ RC6Decrypt proc
     local buffer: ByteSequence
     local text_block: oword
     decrypted_text equ [rbp + 16]
-	text equ [rbp + 24]
-	key equ [rbp + 32]
+    text equ [rbp + 24]
+    key equ [rbp + 32]
     rounds equ [rbp + 40]
-	; Prologue
+    ; Prologue
     push rsi
     push rdi
     push r12
     push r13
     push r14
     push r15
-	mov decrypted_text, rcx
-	mov text, rdx
-	mov key, r8
+    mov decrypted_text, rcx
+    mov text, rdx
+    mov key, r8
     mov rounds, r9b
-	sub rsp, 32
+    sub rsp, 32
 
     ; Initialize array L with key
     mov rcx, r8
@@ -306,8 +306,8 @@ condition:
     call RemovePadding
 
     ; Free buffer
-	lea rcx, buffer
-	call FreeBS
+    lea rcx, buffer
+    call FreeBS
 
     mov rax, decrypted_text
 
@@ -368,7 +368,7 @@ cycle:
     mov r9d, r8d
     mov r8d, eax
 
-	; u = (D(2D + 1)) <<< lg w
+    ; u = (D(2D + 1)) <<< lg w
     mov eax, r11d
     mov edx, r11d
     shl edx, 1
@@ -377,7 +377,7 @@ cycle:
     rol eax, 5
     mov r15d, eax
 
-	; t = (B(2B + 1)) <<< lg w
+    ; t = (B(2B + 1)) <<< lg w
     mov eax, r9d
     mov edx, r9d
     shl edx, 1
@@ -386,14 +386,14 @@ cycle:
     rol eax, 5
     mov r14d, eax
 
-	; C = ((C - S[2i + 1]) >>> t) xor u
+    ; C = ((C - S[2i + 1]) >>> t) xor u
     sub r10d, [r13 + r12 * 8 + 4]
     mov ecx, r14d
     and ecx, 31
     ror r10d, cl
     xor r10d, r15d
 
-	; A = ((A - S[2i]) >>> u) xor t
+    ; A = ((A - S[2i]) >>> u) xor t
     sub r8d, [r13 + r12 * 8]
     mov ecx, r15d
     and ecx, 31
@@ -610,42 +610,42 @@ RC6Shuffle endp
 ;   RAX: ByteSequence* - key (caller must free)
 RC6GenKey proc
     key equ [rbp + 16]
-	key_length equ [rbp + 24]
+    key_length equ [rbp + 24]
     ; Prologue
-	push rbp
-	mov rbp, rsp
-	push r12
-	push r13
-	mov key, rcx
-	sub rsp, 32
+    push rbp
+    mov rbp, rsp
+    push r12
+    push r13
+    mov key, rcx
+    sub rsp, 32
 
     ; Init key
-	movzx rdx, dl
-	call CreateBS
+    movzx rdx, dl
+    call CreateBS
 
     ; Fill key with random values
-	; r12 - index
-	; r13 - key data
-	mov r12, [rax + ByteSequence.data_size]
+    ; r12 - index
+    ; r13 - key data
+    mov r12, [rax + ByteSequence.data_size]
     dec r12
-	mov r13, [rax + ByteSequence.data]
+    mov r13, [rax + ByteSequence.data]
     jmp condition
 cycle:
-	call GenRandom8
+    call GenRandom8
     mov [r13 + r12], al
-	dec r12
+    dec r12
 condition:
-	cmp r12, 0
-	jge cycle
+    cmp r12, 0
+    jge cycle
 
-	mov rax, key
+    mov rax, key
 
     ; Epilogue
-	add rsp, 32
-	pop r13
-	pop r12
-	mov rsp, rbp
-	pop rbp
-	ret
+    add rsp, 32
+    pop r13
+    pop r12
+    mov rsp, rbp
+    pop rbp
+    ret
 RC6GenKey endp
 end
