@@ -1,0 +1,13 @@
+extern TestCaesar: proc
+extern TestSubstitution: proc
+extern TestPermutation: proc
+extern TestOtp: proc
+extern TestVigenere: proc
+extern TestDes: proc
+extern TestTripleDes: proc
+extern TestBlowfish: proc
+extern TestRC4: proc
+extern TestRC5: proc
+extern TestRC6: proc
+extern TestAes: proc
+extern TestTea: proc

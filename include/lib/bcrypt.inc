@@ -1,0 +1,3 @@
+extern BCryptOpenAlgorithmProvider: proc
+extern BCryptCloseAlgorithmProvider: proc
+extern BCryptGenRandom: proc
